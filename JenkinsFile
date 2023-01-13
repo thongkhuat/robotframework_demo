@@ -5,29 +5,10 @@ timeout(time: 5, unit: 'MINUTES') {
               deleteDir()
             }
 
-            stage('Git pull') {
-              checkout scm
-            }
-
-			try{
-			    stage('robot'){
-	               sh "cd ${workspace}"
-				   sh "python --version"
-	               sh "pip install allure-robotframework"
-	               sh "robot --listener allure_robotframework ./Tests"
-	            }
-			} catch(e) {
-				echo e.toString()
+            stage('Setup env') {
+			  steps {
+			     sh 'printenv | sort'
+			  }
 			}
-
-            stage('allure'){
-               allure([
-                  disabled: false,
-                  includeProperties: false,
-                  jdk: '',
-                  reportBuildPolicy: 'ALWAYS',
-                  results: [[path: 'output/allure']]
-               ])
-            }
     }
 }
