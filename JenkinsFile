@@ -6,7 +6,7 @@ timeout(time: 5, unit: 'MINUTES') {
             }
 
             stage('Setup env') {
-			    sh 'printenv | sort'
+			    sh 'java -version'
 			}
     }
 }
