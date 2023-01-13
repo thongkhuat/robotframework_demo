@@ -1,18 +1,32 @@
-pipeline {
-    agent {
-      docker {
-        image 'python:3'
-        label 'alpha-node'
-      }
-    }
-    stages {
-        stage('Test') {
-            steps {
-              sh """
-              python --version
-              python ./test.py
-              """
+timeout(time: 5, unit: 'MINUTES') {
+    node {
+            def workspace = pwd()
+            stage('Clean workspace') {
+              deleteDir()
             }
-        }
+
+            stage('Git pull') {
+              checkout scm
+            }
+
+			try{
+			    stage('robot'){
+	               bat "cd ${workspace}"
+	               bat "pip install allure-robotframework"
+	               bat "robot --listener allure_robotframework ./Tests"
+	            }
+			} catch(e) {
+				echo e.toString()
+			}
+
+            stage('allure'){
+               allure([
+                  disabled: false,
+                  includeProperties: false,
+                  jdk: '',
+                  reportBuildPolicy: 'ALWAYS',
+                  results: [[path: 'output/allure']]
+               ])
+            }
     }
 }
