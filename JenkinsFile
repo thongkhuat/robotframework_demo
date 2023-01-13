@@ -1,31 +1,18 @@
-timeout(time: 5, unit: 'MINUTES') {
-    node {
-            def workspace = pwd()
-            stage('Clean workspace') {
-              deleteDir()
+pipeline {
+    agent {
+      docker {
+        image 'python:3'
+        label 'my-build-agent'
+      }
+    }
+    stages {
+        stage('Test') {
+            steps {
+              sh """
+              python --version
+              python ./test.py
+              """
             }
-
-            stage('Git pull') {
-              checkout scm
-            }
-
-			try{
-			    stage('robot'){
-	               bat "cd ${workspace}"
-	               bat "robot --listener allure_robotframework ./Tests"
-	            }
-			} catch(e) {
-				echo e.toString()
-			}
-
-            stage('allure'){
-               allure([
-                  disabled: false,
-                  includeProperties: false,
-                  jdk: '',
-                  reportBuildPolicy: 'ALWAYS',
-                  results: [[path: 'output/allure']]
-               ])
-            }
+        }
     }
 }
