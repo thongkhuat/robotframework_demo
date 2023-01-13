@@ -5,7 +5,7 @@ Library     SeleniumLibrary
 *** Test Cases ***
 Test robot
     Open Browser    https://robotframework.org/    gc
-    Sleep    5s
+    Sleep    3s
     Close All Browsers
 
 Test selenium
@@ -14,4 +14,3 @@ Test selenium
     Input Text    //input[@name = 'q']    this is a test    True
     Press Keys    None    RETURN
     Close All Browsers
-
