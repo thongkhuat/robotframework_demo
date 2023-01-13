@@ -6,9 +6,7 @@ timeout(time: 5, unit: 'MINUTES') {
             }
 
             stage('Setup env') {
-			  steps {
-			     sh 'printenv | sort'
-			  }
+			    sh 'printenv | sort'
 			}
     }
 }
